@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-location";
+import { Outlet } from "react-location";
 
 const Layout = () => {
   return (
