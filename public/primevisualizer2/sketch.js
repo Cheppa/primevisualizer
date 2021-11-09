@@ -1,3 +1,6 @@
+const Height = 600;
+const Width = 900;
+
 let primes = [2];
 let diff = [0];
 
@@ -6,10 +9,15 @@ let biggestDiff = 0;
 
 let floaters = [];
 
-const strokeWidth = 6;
-const lineWidth = strokeWidth + 4;
+const strokeWidth = 10;
+const lineWidth = strokeWidth + 1;
+
+const maxBottomGraphHeight = 80;
 
 const threshold = 30;
+
+const topGraphMarginTop = 30;
+const topGraphHeight = Height - maxBottomGraphHeight - topGraphMarginTop - 20;
 
 const maxPrime = () => Math.max(...primes);
 
@@ -30,11 +38,13 @@ const isPrime = (number) => {
 
 let repeat = 1;
 let fpsValue = 30;
+let maxNewDiffs = 30;
 
 // The statements in the setup() function
 // execute once when the program begins
 function setup() {
-  createCanvas(900, 600); // Size must be the first statement
+  createCanvas(Width, Height); // Size must be the first statement
+  strokeCap(SQUARE);
 
   // Set text characteristics
   textFont("Arial");
@@ -43,6 +53,7 @@ function setup() {
 
   const timesE = document.getElementById("times");
   const fpsE = document.getElementById("fps");
+  const maxNewDiffsE = document.getElementById("maxnewdiffs");
 
   fpsE.addEventListener("input", (e) => {
     fpsValue = Number(e.target.value);
@@ -51,9 +62,13 @@ function setup() {
   timesE.addEventListener("input", (e) => {
     repeat = Number(e.target.value);
   });
+  maxNewDiffsE.addEventListener("input", (e) => {
+    maxNewDiffs = Number(e.target.value);
+  });
 
   fps = Number(fpsE.value);
   repeat = Number(timesE.value);
+  maxNewDiffs = Number(maxNewDiffsE.value);
 
   frameRate(fpsValue);
 }
@@ -65,19 +80,19 @@ function draw() {
   background(0); // Set the background to black
 
   fill(255);
-  textSize(40);
+  textSize(20);
   textAlign(LEFT, TOP);
-  text(maxPrime(), 3, 3);
+  text(maxPrime(), 2, 2);
 
   for (let i = 0; i < repeat; i++) {
     let newPrime = primes[primes.length - 1] + 1;
     while (!isPrime(newPrime)) {
       newPrime++;
     }
-    if (primes.length >= width / lineWidth) {
-      diff.shift();
-      primes.shift();
-      floaters.shift();
+    if (primes.length >= maxNewDiffs) {
+      diff.splice(0, primes.length - maxNewDiffs);
+      floaters.splice(0, primes.length - maxNewDiffs);
+      primes.splice(0, primes.length - maxNewDiffs);
     }
     const newDiff = newPrime - primes[primes.length - 1];
     if (!counts?.[newDiff]) {
@@ -109,7 +124,7 @@ function draw() {
     strokeWeight(1);
     textSize(10);
     textAlign(CENTER, BOTTOM);
-    text(String(i), 10 + i * countsStrokeWeight, 50);
+    text(String(i), 10 + i * countsStrokeWeight, topGraphMarginTop);
 
     if (maxCountIndex === i) {
       textAlign(CENTER, BOTTOM);
@@ -117,37 +132,43 @@ function draw() {
       text(
         String(maxCount),
         10 + i * countsStrokeWeight,
-        85 + (count / maxCount) * 400
+        45 + (count / maxCount) * topGraphHeight
       );
     }
     strokeWeight(countsStrokeWeight);
     line(
       10 + i * countsStrokeWeight,
-      60,
+      topGraphMarginTop,
       10 + i * countsStrokeWeight,
-      60 + (count / maxCount) * 400
+      topGraphMarginTop + (count / maxCount) * topGraphHeight
     );
   });
 
+  let realStrokeWidth = strokeWidth;
+  let realLineWidth = lineWidth;
+  if (strokeWidth * maxNewDiffs > width) {
+    realStrokeWidth = width / maxNewDiffs;
+    realLineWidth = width / maxNewDiffs;
+  }
   diff.forEach((value, i) => {
-    strokeWeight(strokeWidth);
+    strokeWeight(realStrokeWidth);
 
-    if (biggestDiff > 100) {
+    if (biggestDiff > maxBottomGraphHeight) {
       line(
-        i * lineWidth,
+        i * realLineWidth,
         height,
-        i * lineWidth,
-        height - (value / biggestDiff) * 100
+        i * realLineWidth,
+        height - (value / biggestDiff) * maxBottomGraphHeight
       );
     } else {
-      line(i * lineWidth, height, i * lineWidth, height - value);
+      line(i * realLineWidth, height, i * realLineWidth, height - value);
     }
 
     strokeWeight(1);
     if (floaters[i] > 0) {
       textSize(14);
       textAlign(LEFT, BOTTOM);
-      text(String(floaters[i]), i * lineWidth, height - floaters[i] - 2);
+      text(String(floaters[i]), i * realLineWidth, height - floaters[i] - 2);
     }
   });
 
@@ -155,13 +176,23 @@ function draw() {
   textAlign(RIGHT, BOTTOM);
 
   strokeWeight(1);
-  if (biggestDiff > 100) {
+  if (biggestDiff > maxBottomGraphHeight) {
     stroke(128);
-    line(0, height - 100, width, height - 100);
-    text(String(biggestDiff), width - 3, height - 100);
+    line(
+      0,
+      height - maxBottomGraphHeight,
+      width,
+      height - maxBottomGraphHeight
+    );
+    text(String(biggestDiff), width - 3, height - maxBottomGraphHeight);
   } else {
     stroke(64);
-    line(0, height - 100, width, height - 100);
+    line(
+      0,
+      height - maxBottomGraphHeight,
+      width,
+      height - maxBottomGraphHeight
+    );
     stroke(128);
     line(0, height - biggestDiff, width, height - biggestDiff);
     text(String(biggestDiff), width - 3, height - biggestDiff - 3);
