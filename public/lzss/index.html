@@ -1,0 +1,85 @@
+<html class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/lzss/script.js" defer></script>
+    <style>
+        html {
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #FFF;
+            background-color: #333;
+        }
+
+        main {
+            margin: 20px;
+        }
+
+        .wrap {
+            margin-top: 20px;
+            /* display: flex; */
+            border-radius: 5px;
+            /* border: 1px #AAA solid; */
+            width: 100%;
+        }
+
+        textarea {
+            border-radius: 5px;
+            width: 100%;
+            padding: 1em;
+            color: #000;
+            background-color: rgb(248, 248, 248);
+        }
+
+        #output {
+            min-height: 160px;
+            border-radius: 5px;
+            padding: 1em;
+            color: #000;
+            background-color: rgb(248, 248, 248);
+        }
+
+        .c {
+            margin: 0 2px;
+            border: 1px #AAA solid;
+            display: inline-flex
+        }
+
+        .c>span:first-of-type {
+            margin-right: 1px;
+        }
+
+        .c>span {
+            padding: 0px 2px;
+            background-color: rgb(255, 225, 32);
+        }
+
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Lempel-Ziv-Storer-Szymanski</h1>
+        <div class="tools">
+            <label>Search buffer
+                <input id="search" type="number" value="15" />
+            </label>
+            <label>Look-ahead Buffer
+                <input id="lookahead" type="number" value="6" />
+            </label>
+        </div>
+        <div class="wrap">
+            <h2>Input:</h2>
+            <textarea rows="10" id="input" placeholder="Write your text here..."></textarea>
+        </div>
+        <div class="wrap">
+            <h2>Output:</h2>
+            <div id="output">
+                asd<span class="c"><span>4</span><span>2</span></span>asd
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
