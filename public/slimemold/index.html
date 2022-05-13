@@ -2,15 +2,19 @@
 
 <head>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
-    <script src="slimemold/sketch.js"></script>
+    <script src="sketch.js"></script>
+    <style>
+        main>canvas {
+            width: 100% !important;
+            height: 100% !important;
+            image-rendering: pixelated;
+        }
+
+    </style>
 </head>
 
 <body>
-    <div>difference to previous prime number</div>
-    <div>X = nth prime number</div>
-    <div>Y = difference</div>
-    <div>Top left largest prime found</div>
-    <main>
+    <main id="root">
     </main>
 </body>
 
