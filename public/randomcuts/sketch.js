@@ -9,29 +9,47 @@ function setup() {
     frameRate(30);
     background(0); // Set the background to black
     fill(0);
+    textFont("Arial");
+    textSize(18);
+    textAlign(LEFT, TOP);
 }
 
+function randomPointInCircle() {
+    const radius = diameter / 2;
+    const pt_angle = Math.random() * 2 * Math.PI;
+    const pt_radius_sq = Math.random() * radius * radius;
+    const pt_x = Math.sqrt(pt_radius_sq) * Math.cos(pt_angle);
+    const pt_y = Math.sqrt(pt_radius_sq) * Math.sin(pt_angle);
+    return {
+        x: pt_x + width / 2,
+        y: pt_y + height / 2,
+    };
+}
+let lineCount = 0;
 function draw() {
-    stroke(255, 30); // Set line drawing color to white
-    //   text(maxPrime(), 3, 3);
+    const treshold = 40000;
+    const a = Math.round(Math.min(255, 1 + (lineCount > treshold ? lineCount - treshold : 0) / 5000));
+    stroke(255, a); // Set line drawing color to white
 
-    for (let i = 0; i < 100; i++) {
-        const radius = diameter / 2;
-        const angle = Math.random() * 360;
-        const x = Math.sin(angle) * Math.random() * radius;
-        const y = Math.cos(angle) * Math.random() * radius;
-        point(width / 2 + x, height / 2 + y);
-        // point(x, y);
-        // line(
-        //     Math.random() * width,
-        //     Math.random() * height,
-        //     Math.random() * width,
-        //     Math.random() * height
-        // );
+    for (let i = 0; i < 150; i++) {
+        lineCount++;
+        const { x, y } = randomPointInCircle();
+        const angle = Math.random() * 2 * Math.PI;
+        line(
+            x + Math.cos(angle) * diameter,
+            y + Math.sin(angle) * diameter,
+            x + Math.cos(angle) * -diameter,
+            y + Math.sin(angle) * -diameter
+        );
     }
 
     noFill();
     stroke(color(255, 0, 0), 50); // Set line drawing color to white
-
     circle(width / 2, height / 2, diameter);
+    stroke(color(255, 255, 255), 255); // Set line drawing color to white
+    fill(22);
+    noStroke();
+    rect(0, 0, width, 22);
+    fill(255);
+    text(a + " Lines: " + lineCount, 3, 3);
 }
