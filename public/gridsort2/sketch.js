@@ -140,9 +140,9 @@ function draw() {
                 if (!lC) {
                     move = true;
                 } else {
-                    const sumR = rC.color.reduce((prev, current) => current + prev);
-                    const sumL = lC.color.reduce((prev, current) => current + prev);
-                    if (sumL < sumR) {
+                    const valueR = rgbToHsl(rC.color)
+                    const valueL = rgbToHsl(lC.color)
+                    if (valueR[2] < valueL[2] || valueR[1] < valueL[1]) {
                         move = true;
                     }
                 }
