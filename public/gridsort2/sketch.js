@@ -118,40 +118,10 @@ function draw() {
                 if (!lC) {
                     move = true;
                 } else {
-
-                    let color = "red";
-                    let max = 0;
-                    const rr = rC.color?.[0];
-                    const lr = lC.color?.[0];
-                    max = Math.max(rr, lr);
-
-                    const rg = rC.color?.[1];
-                    const lg = lC.color?.[1];
-                    if (max < Math.max(rg, lg)) {
-                        color = "green";
-                        max = Math.max(rg, lg);
-                    }
-
-                    const rb = rC.color?.[2];
-                    const lb = lC.color?.[2];
-                    if (max < Math.max(rb, lb)) {
-                        color = "blue";
-                        max = Math.max(rb, lb);
-                    }
-                    if ((color = "red")) {
-                        // Sort with red
-                        if (lr > rr) {
-                            move = true;
-                        }
-                    } else if ((color = "green")) {
-                        // Green
-                        if (lg > rg) {
-                            move = true;
-                        }
-                    } else if ((color = "blue")) {
-                        if (lb > rb) {
-                            move = true;
-                        }
+                    const valueR = rgbToHsl(rC.color)
+                    const valueL = rgbToHsl(lC.color)
+                    if (valueR[0] < valueL[0]) {
+                        move = true;
                     }
                 }
                 if (move) {
@@ -193,6 +163,25 @@ function draw() {
     }
     grid = newGrid;
 }
+function rgbToHsl(c) {
+    var r = c[0]/255, g = c[1]/255, b = c[2]/255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+  
+    if(max == min) {
+      h = s = 0; // achromatic
+    } else {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    return new Array(h * 360, s * 100, l * 100);
+  }
 
 function deepCopy(object) {
     return JSON.parse(JSON.stringify(object));
